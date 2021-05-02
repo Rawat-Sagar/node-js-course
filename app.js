@@ -1,5 +1,5 @@
 const express = require("express");
-
+const morgan = require("morgan");
 // express app
 const app = express();
 
@@ -12,6 +12,27 @@ app.listen(3000);
 // app.get('/', (req, res) => {
 //     res.send('<p>Express App</p>');
 // });
+
+
+
+// MiddleWare --browser hangs and don't know how to move down to further code.
+//  --So us next()
+
+// app.use((req, res, next) => {
+//     console.log("New Request Made :");
+//     console.log('Host :', req.hostname);
+//     console.log('Path :', req.path);
+//     console.log('Method :', req.method);
+//     next();
+// });
+
+// app.use((req, res, next) => {
+//     console.log("In the next Middleware");
+//     next();
+// });
+
+// Use Of Morgan MiddleWare
+app.use(morgan('dev'));
 
 
 // Routing for ejs
