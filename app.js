@@ -35,6 +35,7 @@ app.set('view engine', 'ejs');
 
 // Express middleware  & static files
 app.use(express.static('public'));
+app.use(express.urlencoded({ extended: true }))
 
 
 // MiddleWare --browser hangs and don't know how to move down to further code.
@@ -59,9 +60,9 @@ app.use(morgan('dev'));
 // mongoose and mongo sandbox routes  ---getting and saving data in mongodb 
 app.get('/add-blog', (req, res) => {
     const blog = new Blog({
-        title: 'New Blog 2',
-        snippet: 'About My New Blog',
-        body: 'more about my new blog'
+        title: 'New Blog 3',
+        snippet: 'About My New Blog 3',
+        body: 'more about my new blog 3'
     });
 
 
@@ -97,12 +98,15 @@ app.get('/single-blog', (req, res) => {
 
 // Routing for ejs
 app.get('/', (req, res) => {
-    const blogs = [
-        { title: 'Yoshi Finds eggs', snippet: 'lorem ipsum dolor dit amet ' },
-        { title: 'Mandore Finds eggs', snippet: 'lorem ipsum dolor dit amet ' },
-        { title: 'Koishi Finds eggs', snippet: 'lorem ipsum dolor dit amet ' },
-    ];
-    res.render('index', { title: 'Home', blogs });
+
+    // const blogs = [
+    //     { title: 'Yoshi Finds eggs', snippet: 'lorem ipsum dolor dit amet ' },
+    //     { title: 'Mandore Finds eggs', snippet: 'lorem ipsum dolor dit amet ' },
+    //     { title: 'Koishi Finds eggs', snippet: 'lorem ipsum dolor dit amet ' },
+    // ];
+    // res.render('index', { title: 'Home', blogs });
+
+    res.redirect('/blogs');
 });
 
 // Blog Routes  --using index.ejs template  --http://localhost:3000/blogs --outputting doc in views
@@ -114,6 +118,27 @@ app.get('/blogs', (req, res) => {
         .catch((err) => console.log(err));
 });
 
+// Post Request  -- to save the details to db
+app.post('/blogs', (req, res) => {
+    console.log(req.body);
+    const blog = new Blog(req.body);
+    blog.save()
+        .then((result) => {
+            res.redirect('/blogs');
+        })
+        .catch((err) => console.log(err));
+});
+
+// route parameters :id will look into db
+app.get('/blogs/:id', (req, res) => {
+    const id = req.params.id;
+    console.log(id);
+    Blog.findById(id)
+        .then((result) => {
+            res.render('details', { blog: result, title: 'Blog Details' });
+        })
+        .catch((err) => console.log(err));
+})
 
 app.get('/about', (req, res) => {
     res.render('about', { title: 'About' });

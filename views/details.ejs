@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include("./partials/head.ejs")  %>
+
+    <body>
+
+        <%- include("./partials/nav.ejs")  %>
+
+            <div class="details content">
+                <!-- Blog Title -->
+                <h2>
+                    <%= blog.title  %>
+                </h2>
+                <!-- Blog Snippet -->
+                <h3>
+                    <%= blog.snippet  %>
+                </h3>
+                <!-- Blog Body -->
+                <div class="content">
+                    <p>
+                        <%= blog.body  %>
+                    </p>
+                </div>
+                <!-- Button For Delete -->
+                <a class="delete" data-doc="<%= blog._id  %> ">DELETE</a>
+
+            </div>
+
+            <%- include('./partials/footer.ejs')  %>
+    </body>
+
+</html>
