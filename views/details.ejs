@@ -12,6 +12,7 @@
                 <h2>
                     <%= blog.title  %>
                 </h2>
+                <hr>
                 <!-- Blog Snippet -->
                 <h3>
                     <%= blog.snippet  %>
@@ -23,11 +24,31 @@
                     </p>
                 </div>
                 <!-- Button For Delete -->
-                <a class="delete" data-doc="<%= blog._id  %> ">DELETE</a>
+                <a class="delete" data-doc="<%= blog._id  %>">DELETE</a>
 
             </div>
 
             <%- include('./partials/footer.ejs')  %>
+
+                <script>
+                    // AJAX CODE --e = event object
+                    const trashcan = document.querySelector('a.delete');
+                    trashcan.addEventListener('click', (e) => {
+                        // storing a request  --trashcan and data 
+                        const endpoint = `/blogs/${trashcan.dataset.doc}`;
+
+                        fetch(endpoint, {
+                                method: 'DELETE'
+                            })
+                            .then((response) => response.json())
+                            // response.json will act as JS object and we can redirect to main page.
+                            .then((data) => window.location.href = data.redirect)
+                            .catch((err) => console.log(err));
+
+                    })
+                </script>
+
+
     </body>
 
 </html>

@@ -1,8 +1,11 @@
 const express = require("express");
 const morgan = require("morgan");
 
-const { result } = require("lodash");
-const Blog = require("./models/blog");
+// const { result } = require("lodash");
+// const Blog = require("./models/blog");
+
+
+const blogRoutes = require("./routes/blogRoutes"); // For Routing The File
 const mongoose = require("mongoose");
 
 // express app
@@ -58,40 +61,40 @@ app.use(express.urlencoded({ extended: true }))
 app.use(morgan('dev'));
 
 // mongoose and mongo sandbox routes  ---getting and saving data in mongodb 
-app.get('/add-blog', (req, res) => {
-    const blog = new Blog({
-        title: 'New Blog 3',
-        snippet: 'About My New Blog 3',
-        body: 'more about my new blog 3'
-    });
+// app.get('/add-blog', (req, res) => {
+//     const blog = new Blog({
+//         title: 'New Blog 3',
+//         snippet: 'About My New Blog 3',
+//         body: 'more about my new blog 3'
+//     });
 
 
-    blog.save()
-        .then((result) => {
-            res.send(result)
-        })
-        .catch((err) => {
-            console.log(err);
-        });
-});
+//     blog.save()
+//         .then((result) => {
+//             res.send(result)
+//         })
+//         .catch((err) => {
+//             console.log(err);
+//         });
+// });
 
 // type --http://localhost:3000/all-blogs
-app.get('/all-blogs', (req, res) => {
-    Blog.find()
-        .then((result) => {
-            res.send(result);
-        })
-        .catch((err) => console.log(err));
-});
+// app.get('/all-blogs', (req, res) => {
+//     Blog.find()
+//         .then((result) => {
+//             res.send(result);
+//         })
+//         .catch((err) => console.log(err));
+// });
 
 // type --http://localhost:3000/single-blog
-app.get('/single-blog', (req, res) => {
-    Blog.findById("60902868a6d5f23c50c95ecb")
-        .then((result) => {
-            res.send(result);
-        })
-        .catch((err) => console.log(err));
-});
+// app.get('/single-blog', (req, res) => {
+//     Blog.findById("60902868a6d5f23c50c95ecb")
+//         .then((result) => {
+//             res.send(result);
+//         })
+//         .catch((err) => console.log(err));
+// });
 
 
 
@@ -109,47 +112,15 @@ app.get('/', (req, res) => {
     res.redirect('/blogs');
 });
 
-// Blog Routes  --using index.ejs template  --http://localhost:3000/blogs --outputting doc in views
-app.get('/blogs', (req, res) => {
-    Blog.find().sort({ createdAt: -1 })
-        .then((result) => {
-            res.render('index', { title: 'All Blogs', blogs: result })
-        })
-        .catch((err) => console.log(err));
-});
 
-// Post Request  -- to save the details to db
-app.post('/blogs', (req, res) => {
-    console.log(req.body);
-    const blog = new Blog(req.body);
-    blog.save()
-        .then((result) => {
-            res.redirect('/blogs');
-        })
-        .catch((err) => console.log(err));
-});
-
-// route parameters :id will look into db
-app.get('/blogs/:id', (req, res) => {
-    const id = req.params.id;
-    console.log(id);
-    Blog.findById(id)
-        .then((result) => {
-            res.render('details', { blog: result, title: 'Blog Details' });
-        })
-        .catch((err) => console.log(err));
-})
 
 app.get('/about', (req, res) => {
     res.render('about', { title: 'About' });
 });
 
 
-
-app.get('/blogs/create', (req, res) => {
-    res.render('create', { title: ' Create a New Blog' });
-});
-
+// blog routes  --only for blog route.
+app.use('/blogs', blogRoutes);
 
 // 404 page
 app.use((req, res) => {
